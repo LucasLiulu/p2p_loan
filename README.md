@@ -1,2 +1,3 @@
 # p2p_loan
-Atfer data clean, create a nn model to predict.
+数据经过清洗并做完特征处理之后，将干净的数据重新存放到CSV文件中。
+神经网络可以直接从这个CSV文件中读取数据，并做简单的处理后一部分直接用于训练神经网络模型，另一部分用于验证。
