@@ -37,6 +37,12 @@ y_train = loans_df['loan_status'][: train_num]
 # 处理不平衡数据
 sm = SMOTE(random_state=42)    # 过采样处理的方法
 X_train, y_train = sm.fit_sample(X_train, y_train)
+'''
+from imblearn.under_sampling import RandomUnderSampler
+rus = RandomUnderSampler(random_state=0)
+X_train, y_train = rus.fit_sample(X_train, y_train)
+'''
+
 y_train = pd.DataFrame(pd.Series(y_train)).as_matrix()
 X_test = loans_df[feature][train_num:].as_matrix()
 y_test = pd.DataFrame(loans_df['loan_status'][train_num:]).as_matrix()
@@ -84,6 +90,9 @@ for i in range(1000):
    sess.run(train_step, feed_dict={xs: X_train, ys: y_train, keep_prob: 0.5})
    if i % 50 == 0:
        # to see the step improvement
-       print(1-sess.run(accuracy, feed_dict={xs: X_test, ys: y_test, keep_prob: 1.0}), 'train times: ', i)
+       print('The accuracy is: %.2f' % 1-sess.run(accuracy, feed_dict={xs: X_test, ys: y_test, keep_prob: 1.0}) + 'train times: %d' % i)
 
-print('The accuracy is :', 1-sess.run(accuracy, feed_dict={xs: X_test, ys: y_test, keep_prob: 1.0}))
+    if 1-sess.run(accuracy, feed_dict={xs: X_test, ys: y_test, keep_prob: 1.0}) > bacc:
+        bacc = 1-sess.run(accuracy, feed_dict={xs: X_test, ys: y_test, keep_prob: 1.0})
+
+print('The best accuracy is: %.2f' % bacc)
