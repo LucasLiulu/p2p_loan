@@ -88,6 +88,14 @@ variable_averages_op = avg_ema.apply(tf.trainable_variables())
 weight1 = tf.Variable(tf.random_normal([12, 100], stddev=1, seed=1), name='weight1')
 biases1 = tf.Variable(tf.constant(0.1, shape=[100]), name='biases1')
 l1 = add_layer(xs, weight1, biases1, avg_class=None, activation_function=tf.nn.relu)
+# 添加一个卷积层
+filter_weight1 = tf.Variable(tf.random_normal([5, 5, 10, 1000], stddev=1, seed=1))
+conv_biases1 = tf.Variable(tf.constant(0.1, shape=[1000]))
+conv1 = tf.nn.relu(tf.nn.bias_add(tf.nn.conv2d(tf.reshape(l1, [-1, 10, 10, 10]), filter_weight1, strides=[1, 2, 2, 1], padding='SAME'), 
+                                  conv_biases1))
+# 添加池化层
+pool1 = tf.nn.max_pool(conv1, ksize=[1, 3, 3, 1], strides=[1, 2, 2, 1], padding='SAME')
+#print('pool1 shape: ', pool1)
 # add output layer 输入值是隐藏层 l1，在预测层输出 1 个one hot结果
 weight2 = tf.Variable(tf.random_normal([100, 2], stddev=1, seed=1), name='weight2')
 biases2 = tf.Variable(tf.constant(0.1, shape=[2]), name='biases2')
